@@ -163,7 +163,7 @@ class SimulatedDataGenerator:
 
         # Seasonal component (summer AC, winter heating)
         quarters = np.array([d.quarter for d in dates])
-        seasonal = np.where(quarters.isin([1, 3]), 50, -30)
+        seasonal = np.where(np.isin(quarters, [1, 3]), 50, -30)
 
         # Economic correlation component
         economic_cycle = 40 * np.sin(np.arange(n) * 2 * np.pi / 16)

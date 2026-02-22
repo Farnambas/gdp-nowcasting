@@ -218,8 +218,17 @@ def prepare_model_data(
     """
     df = df.copy()
 
-    if drop_na:
-        df = df.dropna()
+    # First, keep only rows where target is valid
+    df = df[df[target_col].notna()]
+
+    # Separate features and target
+    feature_cols = [c for c in df.columns if c not in [target_col, "gdp", "quarter"]]
+
+    # Forward fill then backward fill NaN in features
+    df[feature_cols] = df[feature_cols].ffill().bfill()
+
+    # Fill any remaining NaN with 0
+    df[feature_cols] = df[feature_cols].fillna(0)
 
     if len(df) == 0:
         raise ValueError("No data remaining after dropping NaN values")
